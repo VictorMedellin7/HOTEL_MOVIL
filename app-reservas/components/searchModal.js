@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
+
 
 export const Search = ({ navigation }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [selectedMunicipio, setSelectedMunicipio] = useState(null);
 
   const handleMunicipioSelection = (selectedMunicipio) => {
-    // Actualizar el estado del municipio seleccionado
     navigation.navigate('HomeScreen', { selectedMunicipio });
   };
 
@@ -36,7 +34,6 @@ export const Search = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* ... (código existente) */}
       <FlatList
         data={searchResults}
         keyExtractor={(item) => item.id_municipio.toString()}

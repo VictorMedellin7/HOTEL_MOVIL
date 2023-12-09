@@ -1,13 +1,33 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Pressable, StyleSheet, View, Image, Text, Dimensions } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import axios from 'axios';
 
 export function HotelCards({ navigation }) {
+  
+  const [searchResults, setSearchResults] = useState([]);
+  const [selectedMunicipio, setSelectedMunicipio] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://192.168.1.64:6969/api/hotels');
+        setSearchResults(response.data[0]);
+        console.log(response.data[0]);
+        console.log("Nombre del hotel:", response.data[0].name);
+      } catch (error) {
+        console.error('Error al obtener datos:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <View style={styles.card}>
       <Pressable
         onPress={() => {
-          navigation.navigate('SelectRoomScreen');
+          navigation.navigate('SelectRoom');
         }}
         style={styles.pressable}
       >
@@ -21,13 +41,11 @@ export function HotelCards({ navigation }) {
           />
         </View>
         <View style={styles.contentContainer}>
-          <Text style={styles.hotelName}>Hotel One La Paz</Text>
+          <Text style={styles.hotelName}>{searchResults.name}</Text>
           <View style={styles.rate}>
             <Text style={styles.rateText}>8.3</Text>
           </View>
-          <Text style={styles.description}>
-            Using Lorem ipsum to focus attention on graphic elements in a webpage
-            design proposal·
+          <Text style={styles.description}>{searchResults.description}
           </Text>
         </View>
         <AntDesign style={styles.heartIcon} name="hearto" size={28} color="black" />

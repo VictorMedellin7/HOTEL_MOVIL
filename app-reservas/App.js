@@ -17,7 +17,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='HomeScreen'>
+      <Stack.Navigator initialRouteName='SelectRoom'>
 
         <Stack.Screen
           name='LoginScreen'
