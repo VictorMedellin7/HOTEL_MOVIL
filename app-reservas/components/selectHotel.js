@@ -18,7 +18,7 @@ export function SelectHotelScreen({ navigation }) {
                     color="black" />
 
             </View>
-            <CardHotel></CardHotel>
+            
         </View>);
 }
 const styles_h = StyleSheet.create({

@@ -15,9 +15,6 @@ export const HomeScreen = ({ navigation }) => {
     const [selectedDates, setSelectedDates] = useState({});
     const [data,setData] = useState('')
     
-    
-
-    
     const goToDestination = () => {
         navigation.navigate('Search');
     };

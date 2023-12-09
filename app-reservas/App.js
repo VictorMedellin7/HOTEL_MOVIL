@@ -3,27 +3,39 @@ import { NavigationContainer } from '@react-navigation/native';
 //import { SelectHotelScreen } from './components/selectHotelScreen'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { HomeScreen } from './components/homeScreen';
-//import { LoginScreen } from './components/login';
+import { LoginScreen } from './components/login';
 //import {Room} from './components/roomCard'
 //import { CardHotel } from './components/hotelCards';
-//import { Favorites } from './components/favorites';
 import { Search } from './components/searchModal';
 import {RegisterScreen} from './components/createAcount';
 import { SelectRoomScreen } from './components/selectRoom';
 import { SelectHotelScreen } from './components/selectHotel';
+import { Favorites } from './components/favoritos';
 
 const Stack = createNativeStackNavigator();
-
 export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='SelectRoom'>
+      <Stack.Navigator initialRouteName='LoginScreen'>
 
+        <Stack.Screen
+          name='LoginScreen'
+          component={LoginScreen}
+          options={{
+            headerShown: false
+          }} />
 
         <Stack.Screen
           name='HomeScreen'
           component={HomeScreen}
+          options={{
+            headerShown: false
+          }} />
+
+        <Stack.Screen
+          name='Favorites'
+          component={Favorites}
           options={{
             headerShown: false
           }} />
@@ -54,7 +66,6 @@ export default function App() {
           options={{
             headerShown: false
           }} />
-
 
       </Stack.Navigator>
     </NavigationContainer>

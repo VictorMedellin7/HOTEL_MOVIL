@@ -9,7 +9,7 @@ export const Search = () => {
   const [searchHistory, setSearchHistory] = useState([]);
 
   const handleSearch = () => {
-    // Agrega la lógica para manejar la búsqueda y actualizar el historial
+    
     console.log('Búsqueda realizada:', searchText);
     setSearchHistory([...searchHistory, searchText]);
     setSearchText('');

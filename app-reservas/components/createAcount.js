@@ -1,25 +1,22 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-export const RegisterScreen = () => {
+export const RegisterScreen = ({ navigation }) => {
     const [nombre, setNombre] = useState('');
     const [apellidos, setApellidos] = useState('');
     const [email, setEmail] = useState('');
     const [curp, setCurp] = useState('');
     const [telefono, setTelefono] = useState('');
     const [contrasena, setContrasena] = useState('');
+    const [mostrarContrasena, setMostrarContrasena] = useState(false);
 
-    const RegisterSchema = Yup.object().shape({
-        nombre: Yup.string().required('Campo requerido'),
-        apellidos: Yup.string().required('Campo requerido'),
-        email: Yup.string().email('Correo electrónico no válido').required('Campo requerido'),
-        curp: Yup.string().required('Campo requerido'),
-        telefono: Yup.string().matches(/^\d{10}$/, 'Teléfono inválido').required('Campo requerido'),
-        contrasena: Yup.string().min(6, 'La contraseña debe tener al menos 6 caracteres').required('Campo requerido'),
-    });
+    const toggleMostrarContrasena = () => {
+        setMostrarContrasena(!mostrarContrasena);
+    };
 
     const handleRegistro = () => {
-        // Aquí puedes realizar la lógica de registro, como enviar los datos a un servidor
+
         console.log('Registro:', {
             nombre,
             apellidos,
@@ -31,41 +28,67 @@ export const RegisterScreen = () => {
     };
 
     return (
-        <View style={styles.container}> <Formik
-            initialValues={{
-                nombre: '',
-                apellidos: '',
-                email: '',
-                curp: '',
-                telefono: '',
-                contrasena: '',
-            }}
-            validationSchema={RegisterSchema}
-            onSubmit={handleRegistro}
-        >
-            {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-                <View style={styles.container}>
-                    <Text style={styles.makeAcountText}>Crea una cuenta</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Nombre"
-                        onChangeText={handleChange('nombre')}
-                        onBlur={handleBlur('nombre')}
-                        value={values.nombre}
-                    />
-                    {touched.nombre && errors.nombre && <Text style={styles.error}>{errors.nombre}</Text>}
+        <View style={styles.container}>
+            <Text style={{ fontSize: 34, color: '#fff' }}>Crear cuenta</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Nombre"
+                value={nombre}
+                onChangeText={setNombre}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Apellidos"
+                value={apellidos}
+                onChangeText={setApellidos}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="CURP"
+                value={curp}
+                onChangeText={setCurp}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Teléfono"
+                value={telefono}
+                onChangeText={setTelefono}
+                keyboardType="phone-pad"
+            />
 
-                    {/* Repite lo mismo para los demás campos */}
 
-                    <TouchableOpacity style={styles.btn} onPress={handleSubmit}>
-                        <Text style={{ alignSelf: 'center', color: '#fff', fontSize: 22 }}>Crear cuenta</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Text style={{ marginTop: '6%', color: '#fff' }}>¿Ya tienes una cuenta?</Text>
-                    </TouchableOpacity>
-                </View>
-            )}
-        </Formik>
+            <View style={styles.inputContainer}>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Contraseña"
+                    value={contrasena}
+                    onChangeText={setContrasena}
+                    secureTextEntry={!mostrarContrasena}
+                />
+                <TouchableOpacity style={{ padding: 10 }} onPress={toggleMostrarContrasena}>
+                    <Icon name={mostrarContrasena ? 'eye' : 'eye-slash'} size={20} color="#000" />
+                </TouchableOpacity>
+            </View>
+
+
+            <TouchableOpacity style={styles.btn} onPress={handleRegistro} >
+                <Text style={styles.textBtn}>Crear</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+            onPress={()=>navigation.navigate('LoginScreen')}
+            >
+            <Text style={{ color: '#fff' }}>Ya tienes una cuenta?</Text>
+
+            </TouchableOpacity>
+            
         </View>
     );
 };
@@ -73,37 +96,43 @@ export const RegisterScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#0F1F68',
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
-        backgroundColor: '#0F1F68',
-        gap: 40
+        gap: 25
     },
     input: {
-        height: 59,
-        width: '80%',
         backgroundColor: '#fff',
-        borderWidth: 1,
+        height: 49,
+        width: '85%',
         marginBottom: 10,
         paddingLeft: 10,
-        borderRadius: 20,
+        fontSize: 20,
+        borderRadius: 15,
+        textAlign: 'center'
+    },
+    textBtn: {
+        color: '#fff',
+        borderWidth: 2,
+        backgroundColor: '#3498db',
+        padding: 20,
+        borderRadius: 25,
         textAlign: 'center',
-        fontSize: 23
+        fontSize: 22
 
     },
-
     btn: {
         marginTop: '10%',
-        borderRadius: 18,
-        width: '35%',
-        padding: '3%',
-        backgroundColor: '#3468db',
+        width: '40%'
     },
-    makeAcountText: {
-        color: '#fff',
-        fontSize: 33
-
-    }
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderColor: '#fff',
+        borderRadius: 15,
+        width: '85%',
+        backgroundColor: '#fff'
+    },
 });
-
 
