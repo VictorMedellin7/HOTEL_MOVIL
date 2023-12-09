@@ -1,41 +1,46 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import axios from 'axios';
 
-export const Search = () => {
-  const navigation = useNavigation();
-  const [searchText, setSearchText] = useState('');
-  const [searchHistory, setSearchHistory] = useState([]);
+export const Search = ({ navigation }) => {
+  const [searchResults, setSearchResults] = useState([]);
+  const [selectedMunicipio, setSelectedMunicipio] = useState(null);
 
-  const handleSearch = () => {
-    
-    console.log('Búsqueda realizada:', searchText);
-    setSearchHistory([...searchHistory, searchText]);
-    setSearchText('');
+  const handleMunicipioSelection = (selectedMunicipio) => {
+    // Actualizar el estado del municipio seleccionado
+    navigation.navigate('HomeScreen', { selectedMunicipio });
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://192.168.1.64:6969/api/munis');
+        setSearchResults(response.data.munis);
+      } catch (error) {
+        console.error('Error al obtener datos:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const renderMunicipios = ({ item }) => (
+    <TouchableOpacity onPress={() => handleMunicipioSelection(item)}>
+      <View style={styles.municipioItem}>
+        <Text style={styles.municipioName}>{item.name}</Text>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')} style={styles.backButton}>
-          <Icon name="arrow-left" size={20} color="#fff" />
-        </TouchableOpacity>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Ingrese su destino"
-          value={searchText}
-          onChangeText={(text) => setSearchText(text)}
-          onSubmitEditing={handleSearch}
-        />
-      </View>
-
-      <Text style={styles.label}>Historial de búsquedas</Text>
-
+      {/* ... (código existente) */}
       <FlatList
-        data={searchHistory}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => <Text style={styles.historyItem}>{item}</Text>}
+        data={searchResults}
+        keyExtractor={(item) => item.id_municipio.toString()}
+        renderItem={renderMunicipios}
       />
     </View>
   );
@@ -48,36 +53,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#0F1F68',
     paddingTop: 50,
   },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  backButton: {
-    marginRight: 10,
-  },
-  searchInput: {
-    flex: 1,
-    height: 40,
-    borderWidth: 2,
-    paddingHorizontal: 10,
-    backgroundColor: '#fff',
-    borderColor: '#3498db',
-  },
-  label: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'left',
+  municipioItem: {
+    backgroundColor: '#3498db',
+    borderRadius: 5,
     marginBottom: 10,
-    marginTop: 200,
-    color: '#fff',
+    padding: 15,
   },
-  historyItem: {
-    fontSize: 16,
-    marginBottom: 5,
+  municipioName: {
+    fontSize: 18,
     color: '#fff',
+    fontWeight: 'bold',
   },
 });
-
-
-
-
